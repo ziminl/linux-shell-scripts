@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Read the contents of /etc/os-release into variables
-source /etc/os-release
-
-# Check for Debian-based distributions
 if [[ $ID == "debian" || $ID == "ubuntu" || $ID == "linuxmint" ]]; then
     echo "Debian-based"
 elif [[ $ID == "fedora" || $ID == "centos" || $ID == "rhel" || $ID == "rocky" ]]; then
@@ -11,9 +7,6 @@ elif [[ $ID == "fedora" || $ID == "centos" || $ID == "rhel" || $ID == "rocky" ]]
 else
     echo "other. cant install"
 fi
-
-
-
 
 sudo apt install curl
 
@@ -25,3 +18,5 @@ sudo apt update -y
 sudo apt upgrade -y
 
 sudo apt install brave-browser
+
+
