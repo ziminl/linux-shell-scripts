@@ -1,4 +1,5 @@
 #!/bin/bash
+#for ubuntu. kali n parrot has already
 
 INSTALL_DIR="/opt/burp"
 
