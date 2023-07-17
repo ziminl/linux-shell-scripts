@@ -1,0 +1,59 @@
+#!/bin/bash
+
+SERVER_PRIVATE_KEY=
+SERVER_ADDRESS=
+SERVER_LISTEN_PORT=
+CLIENT_PRIVATE_KEY=
+CLIENT_ADDRESS="
+SERVER_PUBLIC_KEY="
+
+sudo apt update
+sudo apt upgrade -y
+
+sudo apt install wireguard -y
+
+sudo bash -c "cat > /etc/wireguard/wg0.conf << EOL
+
+
+
+PrivateKey = $SERVER_PRIVATE_KEY
+Address = $SERVER_ADDRESS
+ListenPort = $SERVER_LISTEN_PORT
+PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o ens3 -j MASQUERADE; ip6tables -A FORWARD -i %i -j ACCEPT; ip6tables -t nat -A POSTROUTING -o ens3 -j MASQUERADE
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o ens3 -j MASQUERADE; ip6tables -D FORWARD -i %i -j ACCEPT; ip6tables -t nat -D POSTROUTING -o ens3 -j MASQUERADE
+
+
+
+PublicKey = $CLIENT_PUBLIC_KEY
+AllowedIPs = $CLIENT_ADDRESS/32
+EOL"
+
+sudo sysctl -w net.ipv4.ip_forward=1
+sudo sysctl -w net.ipv6.conf.all.forwarding=1
+
+sudo systemctl start wg-quick@wg0
+sudo systemctl enable wg-quick@wg0
+
+sudo bash -c "cat > client.conf << EOL
+
+
+
+PrivateKey = $CLIENT_PRIVATE_KEY
+Address = $CLIENT_ADDRESS/24
+DNS = 1.1.1.1
+
+
+
+PublicKey = $SERVER_PUBLIC_KEY
+Endpoint = $SERVER_ADDRESS:$SERVER_LISTEN_PORT
+AllowedIPs = 0.0.0.0/0, ::/0
+PersistentKeepalive = 25
+EOL"
+
+
+
+sudo systemctl restart wg-quick@client
+
+echo "complete"
+
+
