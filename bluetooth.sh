@@ -1,5 +1,7 @@
 #!/bin/bash
 
+hciconfig
+
 sudo systemctl start bluetooth
 
 cleanup() {
