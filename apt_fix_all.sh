@@ -1,3 +1,4 @@
+#!/bin/bash
 sudo rm /etc/apt/trusted.gpg
 sudo rm /etc/apt/trusted.gpg.d/*
 sudo apt-key update
