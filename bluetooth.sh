@@ -1,8 +1,8 @@
 #!/bin/bash
 
-hciconfig
-
 sudo systemctl start bluetooth
+
+hciconfig
 
 cleanup() {
   sudo systemctl stop bluetooth
